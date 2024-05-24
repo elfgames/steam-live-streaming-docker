@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  steam-video-streamer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - path: .env
+    volumes:
+      - ./sample.mp4:/usr/src/app/video.mp4
