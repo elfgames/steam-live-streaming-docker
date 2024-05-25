@@ -2,10 +2,12 @@
 
 VIDEO_PATH="/usr/src/app/video.mp4"
 
-curl -H "Content-Type: application/json" \
-    -X POST \
-    -d '{"content": "[info] Streaming started!"}' \
-    $WEBHOOK_URL
+if [ ! -z "$WEBHOOK_URL" ]; then
+  curl -H "Content-Type: application/json" \
+      -X POST \
+      -d '{"content": "[info] Streaming started!"}' \
+      $WEBHOOK_URL
+fi
 
 # Loop the video and stream it using ffmpeg
 while true; do
@@ -14,12 +16,15 @@ while true; do
   if [[ $? -eq 0 ]]; then
     echo "Command succeeded! Restarting stream..."
   else
-    echo "Stream interrupted, notifying Discord..."
-    curl -H "Content-Type: application/json" \
-      -X POST \
-      -d '{"content": "[alert] stream interrupted, restarting in 10 seconds..."}' \
-      $WEBHOOK_URL
+    echo "Stream interrupted with an error, restarting in 10 seconds..."
 
-    echo "done!"
+    if [ ! -z "$WEBHOOK_URL" ]; then
+      curl -H "Content-Type: application/json" \
+        -X POST \
+        -d '{"content": "[alert] stream interrupted, restarting in 10 seconds..."}' \
+        $WEBHOOK_URL
+    fi
+
+    sleep 10
   fi
 done

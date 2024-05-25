@@ -9,4 +9,4 @@ services:
     env_file:
       - path: .env
     volumes:
-      - ./sample.mp4:/usr/src/app/video.mp4
+      - ./video.mp4:/usr/src/app/video.mp4
